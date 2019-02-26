@@ -1,0 +1,22 @@
+{
+  "name": "cest-qui-jiji-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "nodemon src/index.js localhost 8080"
+  },
+  "dependencies": {
+    "express": "4.16.4",
+    "google-distance": "1.0.1",
+    "got": "9.6.0",
+    "mongoose": "5.4.15",
+    "node-cron": "2.0.3",
+    "util": "0.11.1",
+    "xml2js": "0.4.19"
+  },
+  "devDependencies": {
+    "nodemon": "1.18.4"
+  },
+  "keywords": []
+}
