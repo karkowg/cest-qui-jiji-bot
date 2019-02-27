@@ -1,25 +1,54 @@
-const distance = require("google-distance");
-
-distance.apiKey = process.env.GOOGLE_API_KEY;
-
-const formatDistance = data => ({
-  distance: data.distanceValue, // meters
-  duration: data.durationValue, // seconds
-  origin: data.origin,
-  destination: data.destination,
-  mode: data.mode
+const mapsClient = require("@google/maps").createClient({
+  key: process.env.GOOGLE_API_KEY,
+  Promise: Promise
 });
 
-function calculateDistanceMatrix(origins, destinations, mode = "transit") {
-  return new Promise((resolve, reject) => {
-    distance.get({ origins, destinations, mode }, (err, data) => {
-      if (err) {
-        reject(err);
-      }
+const formatElement = (element, mode) => ({
+  distance: element.distance.value, // meters
+  duration: element.duration.value, // seconds
+  origin: element.origin,
+  destination: element.destination,
+  mode
+});
 
-      resolve(data.map(d => formatDistance(d)));
-    });
-  });
+async function calculateDistanceMatrix(
+  origins,
+  destinations,
+  mode = "transit"
+) {
+  const t8am = new Date();
+  t8am.setHours(8, 0, 0);
+
+  const { json } = await mapsClient
+    .distanceMatrix({
+      origins,
+      destinations,
+      mode,
+      departure_time: t8am
+    })
+    .asPromise();
+
+  const distances = [];
+  const { status, rows } = json;
+
+  if (status === "OK") {
+    for (const [oIdx, orig] of json.origin_addresses.entries()) {
+      for (const [dIdx, dest] of json.destination_addresses.entries()) {
+        const element = rows[oIdx].elements[dIdx];
+
+        if (element.status === "OK") {
+          element.origin = orig;
+          element.destination = dest;
+
+          distances.push(formatElement(element, mode));
+        } else {
+          distances.push({});
+        }
+      }
+    }
+  }
+
+  return distances;
 }
 
 module.exports = { calculateDistanceMatrix };

@@ -7,8 +7,8 @@
     "start": "nodemon src/index.js localhost 8080"
   },
   "dependencies": {
+    "@google/maps": "0.5.5",
     "express": "4.16.4",
-    "google-distance": "1.0.1",
     "got": "9.6.0",
     "mongoose": "5.4.15",
     "node-cron": "2.0.3",

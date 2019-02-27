@@ -1,9 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const { fetchListings } = require("./repository.js");
-const { findPotentialApartmentsForRent } = require("./bot.js");
+
+require("./cron.js");
 
 const app = express();
+const port = process.env.PORT || 3000;
 
 mongoose
   .connect(
@@ -17,11 +19,10 @@ mongoose
   })
   .catch(console.error);
 
-app.get("/", async function(req, res) {
-  // await findPotentialApartmentsForRent();
+app.get("/listings", async function(req, res) {
   const listings = await fetchListings();
 
   res.json(listings);
 });
 
-app.listen(8888, () => console.log("Listening on port 8888!"));
+app.listen(port, () => console.log(`Listening on port ${port}!`));

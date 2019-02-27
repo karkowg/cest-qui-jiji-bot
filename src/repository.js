@@ -1,26 +1,39 @@
 const mongoose = require("mongoose");
-const Distance = require("./models/Distance.js");
-const Listing = require("./models/Listing.js");
+const Schema = mongoose.Schema;
 
-async function createListing(attrs) {
+const distanceSchema = new Schema({
+  distance: Number,
+  duration: Number,
+  origin: String,
+  destination: String,
+  mode: String,
+  _created_at: { type: Date, default: Date.now },
+  _updated_at: { type: Date, default: Date.now }
+});
+
+const listingSchema = new Schema({
+  title: String,
+  url: String,
+  description: String,
+  image_url: String,
+  published_at: Date,
+  lat: String,
+  lng: String,
+  price: Number,
+  distances: [distanceSchema],
+  _created_at: { type: Date, default: Date.now },
+  _updated_at: { type: Date, default: Date.now }
+});
+
+const Listing = mongoose.model("Listing", listingSchema);
+
+async function createListing(attrs, distances) {
   const listing = Listing.create({
-    _id: new mongoose.Types.ObjectId(),
-    ...attrs
+    ...attrs,
+    distances
   });
 
   return listing;
-}
-
-async function createListingDistances(listingId, distancesArr) {
-  const distances = Distance.create(
-    distancesArr.map(d => ({
-      _id: new mongoose.Types.ObjectId(),
-      listing: listingId,
-      ...d
-    }))
-  );
-
-  return distances;
 }
 
 async function findListingByUrl(url) {
@@ -38,7 +51,6 @@ async function findListingByUrl(url) {
 async function fetchListings(limit = 100) {
   return new Promise((resolve, reject) => {
     Listing.find({})
-      .populate("distances")
       .sort({ _created_at: "descending" })
       .limit(limit)
       .exec((err, listings) => {
@@ -53,7 +65,6 @@ async function fetchListings(limit = 100) {
 
 module.exports = {
   createListing,
-  createListingDistances,
   findListingByUrl,
   fetchListings
 };
