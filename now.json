@@ -1,29 +1,12 @@
 {
   "name": "cest-qui-jiji-bot",
   "alias": "cest-qui-jiji-bot",
-  "version": 2,
-  "builds": [
-    {
-      "src": "src/index.js",
-      "use": "@now/node"
-    }
-  ],
+  "version": 1,
   "env": {
     "GOOGLE_API_KEY": "@cqjiji-google-api-key",
     "DB_USERNAME": "@cqjiji-db-username",
     "DB_PASSWORD": "@cqjiji-db-password",
     "DB_NAME": "@cqjiji-db-name",
     "DB_HOST": "@cqjiji-db-host"
-  },
-  "routes": [
-    {
-      "headers": {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, OPTIONS",
-        "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept"
-      },
-      "src": "/(.*)",
-      "dest": "src/index.js"
-    }
-  ]
+  }
 }
