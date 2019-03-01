@@ -1,6 +1,7 @@
 const cron = require("node-cron");
 const { findPotentialApartmentsForRent } = require("./bot.js");
 
-cron.schedule("*/10 * * * *", () => {
+// every 30 minutes
+cron.schedule("*/30 * * * *", () => {
   findPotentialApartmentsForRent();
 });

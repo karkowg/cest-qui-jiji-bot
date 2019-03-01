@@ -25,15 +25,17 @@ const listingSchema = new Schema({
   _updated_at: { type: Date, default: Date.now }
 });
 
+const rejectedUrlSchema = new Schema({ url: String });
+
 const Listing = mongoose.model("Listing", listingSchema);
+const RejectedUrl = mongoose.model("RejectedUrl", rejectedUrlSchema);
 
 async function createListing(attrs, distances) {
-  const listing = Listing.create({
-    ...attrs,
-    distances
-  });
+  return Listing.create({ ...attrs, distances });
+}
 
-  return listing;
+async function createRejectedUrl(url) {
+  return RejectedUrl.create({ url });
 }
 
 async function findListingByUrl(url) {
@@ -63,8 +65,23 @@ async function fetchListings(limit = 100) {
   });
 }
 
+async function fetchRejectedUrls() {
+  return new Promise((resolve, reject) => {
+    RejectedUrl.find({})
+      .exec((err, rejectedUrls) => {
+        if (err) {
+          reject(err);
+        }
+
+        resolve(rejectedUrls);
+      });
+  });
+}
+
 module.exports = {
   createListing,
+  createRejectedUrl,
   findListingByUrl,
-  fetchListings
+  fetchListings,
+  fetchRejectedUrls
 };

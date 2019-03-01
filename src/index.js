@@ -25,6 +25,8 @@ mongoose
 app.get("/listings", async function(req, res) {
   const listings = await fetchListings();
 
+  console.log('listings fetched');
+
   res.json(listings);
 });
 

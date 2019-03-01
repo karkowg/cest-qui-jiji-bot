@@ -8,5 +8,11 @@
     "DB_PASSWORD": "@cqjiji-db-password",
     "DB_NAME": "@cqjiji-db-name",
     "DB_HOST": "@cqjiji-db-host"
+  },
+  "scale": {
+    "sfo1": {
+      "min": 1,
+      "max": 1
+    }
   }
 }
